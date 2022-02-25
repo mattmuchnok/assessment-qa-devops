@@ -4,6 +4,13 @@ const app = express()
 const {bots, playerRecord} = require('./data')
 const {shuffleArray} = require('./utils')
 
+var Rollbar = require('rollbar')
+var rollbar = new Rollbar({
+  accessToken: 'c1400d88e2c1465d90d318a11a75d53e',
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+})
+
 app.use(express.json())
 
 app.use(express.static(path.join(__dirname, './public')))
@@ -51,9 +58,11 @@ app.post('/api/duel', (req, res) => {
         // comparing the total health to determine a winner
         if (compHealthAfterAttack > playerHealthAfterAttack) {
             playerRecord.losses++
+            rollbar.info('player lost')
             res.status(200).send('You lost!')
         } else {
             playerRecord.wins++ //fixed
+            rollbar.info('player won')
             res.status(200).send('You won!')
         }
     } catch (error) {
