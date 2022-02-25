@@ -8,6 +8,8 @@ app.use(express.json())
 
 app.use(express.static(path.join(__dirname, './public')))
 
+const botsArr = []
+
 app.get('/api/robots', (req, res) => {
     try {
         res.status(200).send(botsArr)
@@ -51,7 +53,7 @@ app.post('/api/duel', (req, res) => {
             playerRecord.losses++
             res.status(200).send('You lost!')
         } else {
-            playerRecord.losses++
+            playerRecord.wins++ //fixed
             res.status(200).send('You won!')
         }
     } catch (error) {
